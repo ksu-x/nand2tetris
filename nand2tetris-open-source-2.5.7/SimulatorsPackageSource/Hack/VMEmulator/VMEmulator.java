@@ -661,7 +661,7 @@ public class VMEmulator extends HackSimulator
 
     // Checks that the given value is a legal 16-bit value
     private void check_value(String varName, int value) throws VariableException {
-        if (value < -32768 || value >= 131069)
+        if (value < -32768 || value >= 131072)
             throw new VariableException(value +
                 " is an illegal value for variable", varName);
     }

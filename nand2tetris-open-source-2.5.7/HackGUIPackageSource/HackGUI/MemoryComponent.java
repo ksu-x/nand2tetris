@@ -297,6 +297,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
         for(int i=0;i<values.length;i++) {
             addresses[i] = Format.translateValueToString((int)i, Format.DEC_FORMAT);
             valuesStr[i] = translateValueToString(values[i]);
+//            valuesStr[i] = String.valueOf(values[1]);
         }
         memoryTable.revalidate();
         repaint();
@@ -453,7 +454,6 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
         } catch (NumberFormatException nfe) {
             throw new TranslationException("Illegal value: " + data);
         }
-
         return result;
     }
 

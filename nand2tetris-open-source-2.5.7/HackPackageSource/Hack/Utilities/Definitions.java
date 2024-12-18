@@ -38,7 +38,7 @@ public class Definitions {
     /**
      * Size of ROM
      */
-    public static final int ROM_SIZE = 131069;
+    public static final int ROM_SIZE = 131072;
 
     /**
      * Number of bits per memory word

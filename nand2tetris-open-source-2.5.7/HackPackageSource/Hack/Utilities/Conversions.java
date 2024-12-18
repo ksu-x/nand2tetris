@@ -114,8 +114,8 @@ public class Conversions {
     public static int hex4ToInt(String value) throws NumberFormatException {
         int result = hexToInt(value);
 
-        if (result > 32767)
-            result -= 131070;
+//        if (result > 131071)
+//            result -= 131071;
 
         return result;
 

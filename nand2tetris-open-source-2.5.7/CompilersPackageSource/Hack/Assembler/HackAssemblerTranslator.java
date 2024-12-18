@@ -32,7 +32,7 @@ public class HackAssemblerTranslator {
     /**
      * Indicates an assembly line with no operation
      */
-    public static final int NOP = (int)0x8000;
+    public static final int NOP = (int)0x80000;
 
     // exp constants
     private static final Integer ZERO         = new Integer((int)0xea80);
@@ -192,7 +192,7 @@ public class HackAssemblerTranslator {
             if (input.isToken("@")) {
                 input.advance(true);
                 try {
-                    code = Integer.parseInt(input.token());
+                    code = Integer.parseInt(input.token()) + 0x40000;
                 } catch (NumberFormatException nfe) {
                     throw new AssemblerException("A numeric value is expected");
                 }
@@ -259,9 +259,9 @@ public class HackAssemblerTranslator {
         StringBuffer command = new StringBuffer();
 
         if (code != HackAssemblerTranslator.NOP) {
-            if ((code & 0x8000) == 0) {
+            if ((code & 0x40000) == 0x40000) {
                 command.append('@');
-                command.append(code);
+                command.append(code - 0x40000);
             }
             else {
                 int exp = (int)(code & 0xffc0);

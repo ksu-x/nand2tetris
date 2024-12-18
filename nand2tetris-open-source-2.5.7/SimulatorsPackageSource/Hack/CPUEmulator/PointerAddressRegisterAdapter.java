@@ -37,7 +37,7 @@ public class PointerAddressRegisterAdapter extends Register {
      * the pointedMemory object.
      */
     public PointerAddressRegisterAdapter(RegisterGUI gui, PointedMemory memory) {
-        super(gui, (int)(-32768), (int)131068);
+        super(gui, (int)(-32768), (int)131072);
         this.memory = memory;
         updatePointer = true;
     }

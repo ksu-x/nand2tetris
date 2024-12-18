@@ -17,6 +17,7 @@
 
 package Hack.ComputerParts;
 
+
 /**
  * A computer bus. Allows sending values between computer parts.
  */
@@ -63,7 +64,11 @@ public class Bus extends ComputerPart {
                      ((ValueComputerPartGUI)sourcePart.getGUI()).getValueAsString(sourceIndex));
         }
 
-        targetPart.setValueAt(targetIndex, sourcePart.getValueAt(sourceIndex), false);
+        int v = sourcePart.getValueAt(sourceIndex);
+        if ((v & 0x40000) == 0x40000) {
+            v = v - 0x40000;
+        }
+        targetPart.setValueAt(targetIndex, v, false);
     }
 
     public void refreshGUI() {}
