@@ -30,7 +30,7 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
     private Vector errorListeners;
 
     // The excepted range of numbers
-    private short minValue, maxValue;
+    private int minValue, maxValue;
 
     // The current enabled range
     private int startEnabledRange, endEnabledRange;
@@ -47,7 +47,7 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
 
         errorListeners = new Vector();
         this.minValue = -32768;
-        this.maxValue = 32767;
+        this.maxValue = 131068;
 
         startEnabledRange = -1;
         endEnabledRange = -1;
@@ -57,7 +57,7 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
      * Constructs a new InteractiveValueComputerPart with the given range.
      * If hasGUI is true, the ComputerPart will display its contents.
      */
-    public InteractiveValueComputerPart(boolean hasGUI, short minValue, short maxValue) {
+    public InteractiveValueComputerPart(boolean hasGUI, int minValue, int maxValue) {
         super(hasGUI);
 
         errorListeners = new Vector();
@@ -114,7 +114,7 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
      * Called when the contents of the memory are changed through the memory gui.
      */
     public void valueChanged(ComputerPartEvent event) {
-        short newValue = event.getValue();
+        int newValue = event.getValue();
         int newIndex = event.getIndex();
         clearErrorListeners();
         if ((newValue < minValue || newValue > maxValue) && newValue != nullValue) {

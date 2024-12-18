@@ -19,9 +19,13 @@ package Hack.Translators;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Hashtable;
+
+import Hack.Assembler.AssemblerException;
 import Hack.ComputerParts.*;
 import java.awt.event.*;
+import java.util.Objects;
 import java.util.Vector;
 import Hack.Translators.*;
 import Hack.Utilities.*;
@@ -48,7 +52,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
     protected int programSize;
 
     // The program array
-    protected short[] program;
+    protected int[] program;
 
     // The source code array
     protected String[] source;
@@ -106,7 +110,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
      * If save is true, the compiled program will be saved automatically into a destination
      * file that will have the same name as the source but with the destination extension.
      */
-    public HackTranslator(String fileName, int size, short nullValue, boolean save)
+    public HackTranslator(String fileName, int size, int nullValue, boolean save)
      throws HackTranslatorException {
         if (fileName.indexOf(".") < 0)
             fileName = fileName + "." + getSourceExtension();
@@ -129,7 +133,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
      * A non null sourceFileName specifies a source file to be loaded.
      * The gui is assumed to be not null.
      */
-    public HackTranslator(HackTranslatorGUI gui, int size, short nullValue, String sourceFileName)
+    public HackTranslator(HackTranslatorGUI gui, int size, int nullValue, String sourceFileName)
      throws HackTranslatorException {
         this.gui = gui;
         gui.addHackTranslatorListener(this);
@@ -209,8 +213,8 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
     /**
      * initializes the HackTranslator.
      */
-    protected void init(int size, short nullValue) {
-        program = new short[size];
+    protected void init(int size, int nullValue) {
+        program = new int[size];
         for (int i = 0; i < size; i++)
             program[i] = nullValue;
         programSize = 0;
@@ -381,7 +385,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
             }
 
             updateGUI = false;
-
+//            if (source.length > 1000) {
+//                throw new HackTranslatorException("Error reading from file " + program[7552]);
+//            }
             while(sourcePC < source.length) {
                 int[] compiledRange = compileLineAndCount(source[sourcePC]);
                 if (compiledRange != null) {
@@ -390,6 +396,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
                 sourcePC++;
             }
+
 
             successfulCompilation();
             finalizeCompilation();
@@ -418,17 +425,19 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
      * If display is true, the version is for display purposes. Otherwise, the
      * version should be the final one.
      */
-    protected abstract String getCodeString(short code, int pc, boolean display);
+    protected abstract String getCodeString(int code, int pc, boolean display);
 
     /**
      * Adds the given command to the next position in the program.
      * Throws HackTranslatorException if the program is too large
      */
-    protected void addCommand(short command) throws HackTranslatorException {
+    protected void addCommand(int command) throws HackTranslatorException {
         if (destPC >= program.length)
             throw new HackTranslatorException("Program too large");
-
-        program[destPC++] = command;
+//        if (command == 38990) {
+//            throw new HackTranslatorException("Error reading from file " + destPC);
+//        }
+        program[destPC++] =  command;
         if (updateGUI)
             gui.getDestination().addLine(getCodeString(command, destPC - 1, true));
     }
@@ -436,7 +445,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
     /**
      * Replaces the command in program location pc with the given command.
      */
-    protected void replaceCommand(int pc, short command) {
+    protected void replaceCommand(int pc, int command) {
         program[pc] = command;
         if (updateGUI)
             gui.getDestination().setLineAt(pc, getCodeString(command, pc, true));
@@ -450,9 +459,13 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
         String[] lines = new String[numOfCommands];
 
-        for (int i = 0; i < numOfCommands; i++)
+        for (int i = 0; i < numOfCommands; i++) {
+//            if (i == 7552) {
+//                gui.displayMessage("Error reading from file " + destPC, true);
+//                System.exit(1);
+//            }
             lines[i] = getCodeString(program[i], i, true);
-
+        }
         gui.getDestination().setContents(lines);
     }
 
@@ -578,7 +591,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
     /**
      * Returns the translated machine code program array
      */
-    public short[] getProgram() {
+    public int[] getProgram() {
         return program;
     }
 
@@ -586,7 +599,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
      * Dumps the contents of the translated program into the destination file
      */
     private void dumpToFile() {
-        for (short i = 0; i < programSize; i++)
+        for (int i = 0; i < programSize; i++)
             writer.println(getCodeString(program[i], i, false));
         writer.close();
     }

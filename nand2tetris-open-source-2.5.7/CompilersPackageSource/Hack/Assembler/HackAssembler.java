@@ -19,6 +19,8 @@ package Hack.Assembler;
 
 import java.io.*;
 import java.util.Hashtable;
+import java.util.Objects;
+
 import Hack.ComputerParts.*;
 import Hack.Utilities.*;
 import Hack.Translators.*;
@@ -38,13 +40,13 @@ public class HackAssembler extends HackTranslator {
     private Hashtable symbolTable;
 
     // The comarison program array
-    private short[] comparisonProgram;
+    private int[] comparisonProgram;
 
     // The HackAssembler translator;
     private HackAssemblerTranslator translator;
 
     // Index of the next location for unrecognized labels
-    private short varIndex;
+    private int varIndex;
 
     /**
      * Constructs a new HackAssembler with the size of the program memory
@@ -54,7 +56,7 @@ public class HackAssembler extends HackTranslator {
      * If save is true, the compiled program will be saved automatically into a ".hack"
      * file that will have the same name as the source but with the .hack extension.
      */
-    public HackAssembler(String fileName, int size, short nullValue, boolean save)
+    public HackAssembler(String fileName, int size, int nullValue, boolean save)
      throws HackTranslatorException {
         super(fileName, size, nullValue, save);
     }
@@ -65,7 +67,7 @@ public class HackAssembler extends HackTranslator {
      * A non null sourceFileName specifies a source file to be loaded.
      * The gui is assumed to be not null.
      */
-    public HackAssembler(HackAssemblerGUI gui, int size, short nullValue, String sourceFileName)
+    public HackAssembler(HackAssemblerGUI gui, int size, int nullValue, String sourceFileName)
      throws HackTranslatorException {
         super(gui, size, nullValue, sourceFileName);
 
@@ -85,7 +87,7 @@ public class HackAssembler extends HackTranslator {
         return "Assembler";
     }
 
-    protected void init(int size, short nullValue) {
+    protected void init(int size, int nullValue) {
         super.init(size, nullValue);
         translator = HackAssemblerTranslator.getInstance();
     }
@@ -121,13 +123,13 @@ public class HackAssembler extends HackTranslator {
                 comp.reset();
                 comp.setContents(comparisonFileName);
 
-                comparisonProgram = new short[comp.getNumberOfLines()];
+                comparisonProgram = new int[comp.getNumberOfLines()];
                 for (int i = 0; i < comp.getNumberOfLines(); i++) {
 					if (comp.getLineAt(i).length() != Definitions.BITS_PER_WORD) {
 						throw new HackTranslatorException("Error in file "+comparisonFileName+": Line "+i+" does not contain exactly "+Definitions.BITS_PER_WORD+" characters");
 					}
 					try {
-						comparisonProgram[i] = (short)Conversions.binaryToInt(comp.getLineAt(i));
+						comparisonProgram[i] = (int)Conversions.binaryToInt(comp.getLineAt(i));
 					} catch (NumberFormatException nfe) {
 						throw new HackTranslatorException("Error in file "+comparisonFileName+": Line "+i+" does not contain only 1/0 characters");
 					}
@@ -146,7 +148,7 @@ public class HackAssembler extends HackTranslator {
     // value according to it's location in the program
     private void generateSymbolTable() throws HackTranslatorException {
         symbolTable = Definitions.getInstance().getAddressesTable();
-        short pc = 0;
+        int pc = 0;
         String line;
         String label;
 
@@ -158,6 +160,7 @@ public class HackAssembler extends HackTranslator {
 
                 if (!input.isEnd()) {
                     if (input.isToken("(")) {
+
                         input.advance(true);
                         label = input.token();
                         input.advance(true);
@@ -166,7 +169,7 @@ public class HackAssembler extends HackTranslator {
 
                         input.ensureEnd();
 
-                        symbolTable.put(label,new Short(pc));
+                        symbolTable.put(label,new Integer(pc));
                     }
                     else if (input.contains("["))
                         pc += 2;
@@ -243,7 +246,7 @@ public class HackAssembler extends HackTranslator {
         return result;
     }
 
-    protected String getCodeString(short code, int pc, boolean display) {
+    protected String getCodeString(int code, int pc, boolean display) {
         return Conversions.decimalToBinary(code, 16);
     }
 
@@ -290,20 +293,24 @@ public class HackAssembler extends HackTranslator {
                     boolean numeric = true;
                     String label = input.token();
                     input.ensureEnd();
+
                     try {
-                        Short.parseShort(label);
+                        Integer.parseInt(label);
                     } catch (NumberFormatException nfe) {
                         numeric = false;
                     }
 
+
+
                     if (!numeric) {
-                        Short address = (Short)symbolTable.get(label);
+                        Integer address = (Integer) symbolTable.get(label);
+
                         if (address == null) {
-                            address = new Short(varIndex++);
+                            address = new Integer(varIndex++);
                             symbolTable.put(label, address);
                         }
 
-                        addCommand(translator.textToCode("@" + address.shortValue()));
+                        addCommand(translator.textToCode("@" + address.intValue()));
                     }
                     else
                         addCommand(translator.textToCode(line));

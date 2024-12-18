@@ -73,7 +73,7 @@ public class Conversions {
         for (int i = value.length() - 1, mask = 1; i >= 0; i--, mask = mask << 1) {
             char bit = value.charAt(i);
             if (bit == '1')
-                result = (short)(result | mask);
+                result = (int)(result | mask);
             else if (bit != '0')
                 throw new NumberFormatException();
         }
@@ -115,7 +115,7 @@ public class Conversions {
         int result = hexToInt(value);
 
         if (result > 32767)
-            result -= 65536;
+            result -= 131070;
 
         return result;
 

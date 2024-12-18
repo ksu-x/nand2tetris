@@ -143,7 +143,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
     /**
      * Sets the element at the given index with the given value.
      */
-    public void setValueAt(int index, short value) {
+    public void setValueAt(int index, int value) {
         partPins[index].value = value;
         valuesStr[index] = Format.translateValueToString(value, dataFormat);
         repaint();
@@ -235,7 +235,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
             try {
                 valuesStr[row] = data;
                 partPins[row].value = Format.translateValueToShort(data, dataFormat);
-                notifyListeners((short)row,partPins[row].value);
+                notifyListeners((int)row,partPins[row].value);
             }
             catch(NumberFormatException nfe) {
                 notifyErrorListeners("Illegal value");
