@@ -65,6 +65,9 @@ public abstract class ValueComputerPart extends ComputerPart {
     public synchronized void updateGUI(int index, int value) {
         if (displayChanges) {
             ValueComputerPartGUI gui = (ValueComputerPartGUI)getGUI();
+//            if (value == 2147483647) {
+//                value = -1;
+//            }
             gui.setValueAt(index, value);
 
             if (animate) {

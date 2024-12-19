@@ -668,7 +668,9 @@ public class HackController
         }
         StringCharacterIterator outi = new StringCharacterIterator(out);
         StringCharacterIterator cmpi = new StringCharacterIterator(cmp);
-        for (outi.first(), cmpi.first();
+        outi.first();
+        cmpi.first();
+        for (;
              outi.current() != CharacterIterator.DONE;
              outi.next(), cmpi.next()) {
             if (cmpi.current() != '*' && outi.current() != cmpi.current()) {

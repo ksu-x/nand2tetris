@@ -157,7 +157,7 @@ public class CPU
         int instruction = rom.getValueAt(PC.get());
         boolean pcChanged = false;
 
-        if ((instruction & 0x40000) == 0x40000)
+        if ((instruction & 0x40000000) == 0x40000000)
             bus.send(rom, PC.get(), A, 0);
         else if ((instruction & 0xe000) == 0xe000) {
             computeExp(instruction);

@@ -70,6 +70,10 @@ public class Format {
     public static String translateValueToString(int value, int dataFormat) {
         String result = null;
 
+//        if (value == 2147483647) {
+//            value = -1;
+//        }
+
         switch (dataFormat) {
             case DEC_FORMAT:
                 result = String.valueOf(value);

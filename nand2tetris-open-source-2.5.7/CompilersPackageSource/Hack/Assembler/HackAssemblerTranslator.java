@@ -192,7 +192,7 @@ public class HackAssemblerTranslator {
             if (input.isToken("@")) {
                 input.advance(true);
                 try {
-                    code = Integer.parseInt(input.token()) + 0x40000;
+                    code = Integer.parseInt(input.token()) + 0x40000000;
                 } catch (NumberFormatException nfe) {
                     throw new AssemblerException("A numeric value is expected");
                 }
@@ -259,9 +259,9 @@ public class HackAssemblerTranslator {
         StringBuffer command = new StringBuffer();
 
         if (code != HackAssemblerTranslator.NOP) {
-            if ((code & 0x40000) == 0x40000) {
+            if ((code & 0x40000000) == 0x40000000) {
                 command.append('@');
-                command.append(code - 0x40000);
+                command.append(code - 0x40000000);
             }
             else {
                 int exp = (int)(code & 0xffc0);

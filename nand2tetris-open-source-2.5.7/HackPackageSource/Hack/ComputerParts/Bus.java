@@ -65,8 +65,8 @@ public class Bus extends ComputerPart {
         }
 
         int v = sourcePart.getValueAt(sourceIndex);
-        if ((v & 0x40000) == 0x40000) {
-            v = v - 0x40000;
+        if ((v & 0x80000000) != 0x80000000 && (v & 0x40000000) == 0x40000000) {
+            v = v - 0x40000000;
         }
         targetPart.setValueAt(targetIndex, v, false);
     }
